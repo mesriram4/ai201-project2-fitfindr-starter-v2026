@@ -41,9 +41,57 @@
 
 <!-- Three or four sentences: what a user asks for, and what they get back. -->
 
+1) search_listings(description, size, max_price)
+
++ Purpose: 
+     = Searches and returns a listing based on the description, optionally can include size and max price of item as well. Only function that doesn't call the model.
+
++ Input: 
+     = description --> str 
+     = size --> str | None 
+     = max_price --> float | None 
+
++ Returns: 
+     = List of --> dictionaries with matching listings, best match first 
+
++ If Empty...: 
+     = Returns an empty list
 
 
+2) suggest_outfit(new_item, wardrobe)
+
++ Purpose: 
+     = Recommends one or two outfits given the user's wardrobe and thrifted item. Does call the model through generate(). 
+
++ Input: 
+     = new_item --> listing dict
+     = wardrobe --> wardrobe dict  
+
++ Returns: 
+     = string with outfit suggestions 
+
++ If Empty...: 
+     = Will just return general outfit advice
+
+
+3) create_fit_card(outfit, new_item)
+
++ Purpose: 
+     = Returns a description that people can post about the fit recommended
+
++ Input: 
+     = outfit --> str
+     = new_item --> listing dict  
+
++ Returns: 
+     = two to four sentence caption or description about the outfit
+
++ If Empty...: 
+     = Will still return a description (possibly a general description?)
 ---
+
+Additional Rules (Branch Loop): 
++ If the user includes a price and max size argument in the first tool, then the second tool should return a list dictionary containing items with a similar price and size range as well. otherwise, return a list of items similar to the original item that can be of varying prices and sizes.
 
 ## Tool Inventory
 
