@@ -52,7 +52,28 @@
      = max_price --> float | None 
 
 + Returns: 
-     = List of --> dictionaries with matching listings, best match first 
+     = List --> dictionaries with matching listings, best match first. 
+          + Key is the field name
+          + Value are the titles associated with field names
+     = If size and max_price are not given, then the best match should be an item with keywords in its description that best matches the description input. 
+     = Else, if size and max_price is given, then the best match listing should have a description that shares keywords with the input descritpion, as well as having the closest corresponding sizes and max price (prioritize prices, and if prices are not close, then prioritize choosing best listing based on size.)
+
+     Ex Listing: 
+
+          {
+          "id": "lst_002",
+          "title": "Y2K Baby Tee — Butterfly Print",
+          "description": "Super cute early 2000s baby tee with butterfly graphic. Fitted crop length. Tag says medium but fits like a small.",
+          "category": "tops",
+          "style_tags": ["y2k", "vintage", "graphic tee", "cottagecore"],
+          "size": "S/M",
+          "condition": "excellent",
+          "price": 18.00,
+          "colors": ["white", "pink", "purple"],
+          "brand": null,
+          "platform": "depop"
+          }
+
 
 + If Empty...: 
      = Returns an empty list
@@ -65,7 +86,42 @@
 
 + Input: 
      = new_item --> listing dict
-     = wardrobe --> wardrobe dict  
+          + Key: Id or Title 
+          + Value: Rest of the fields 
+     = wardrobe --> wardrobe dict | Empty dict
+          + Key: Items key
+          + Value: A list of items
+     
+     Ex Wardrobe: 
+          {
+          "items": [
+          {
+               "id": "w_001",
+               "name": "Baggy straight-leg jeans, dark wash",
+               "category": "bottoms",
+               "colors": ["dark blue", "indigo"],
+               "style_tags": ["denim", "streetwear", "baggy"],
+               "notes": "High-waisted, sits above the hip"
+          },
+          {
+               "id": "w_003",
+               "name": "White ribbed tank top",
+               "category": "tops",
+               "colors": ["white"],
+               "style_tags": ["basics", "minimal", "fitted"],
+               "notes": "Goes with everything"
+          },
+          {
+               "id": "w_007",
+               "name": "Chunky white sneakers",
+               "category": "shoes",
+               "colors": ["white"],
+               "style_tags": ["sneakers", "chunky", "streetwear"],
+               "notes": null
+          }
+          ]
+          }
+
 
 + Returns: 
      = string with outfit suggestions 
@@ -87,11 +143,11 @@
      = two to four sentence caption or description about the outfit
 
 + If Empty...: 
-     = Will still return a description (possibly a general description?)
+     = Will still return a general description.
 ---
 
 Additional Rules (Branch Loop): 
-+ If the user includes a price and max size argument in the first tool, then the second tool should return a list dictionary containing items with a similar price and size range as well. otherwise, return a list of items similar to the original item that can be of varying prices and sizes.
++ If the user includes a size and max price argument in search_listings(), then the second tool should return a string describing items within the desired price range inputted into search_listings (with a +/- 2 variation) and an ideal exact size (though this is secondary and can have more variation by 1 size, ex: prioritize Small, but can recommend items that are XS or M as well). Otherwise, return a string describing recommended items regardless of price and size.
 
 ## Tool Inventory
 
