@@ -25,9 +25,7 @@ Given a query that matches at least one listing, the agent completes all three
 tool calls and returns a fit card — in at least 4 of 5 tries.
 
 **Why this target:**
-<!-- Why 4 of 5 and not 5 of 5? Something about your search, probably —
-     "my search is a plain keyword match and some phrasings will miss" is a
-     real answer. -->
+<! 4 out of 5 times the program should be able to identify if the query is valid, and if it is, the agent will proceed with the loop. The 1 out of 5 times could happen if no wardrobe file is given, so the program would have to automatically return a general advice suggestion instead of going through all three tools. -->
 
 ---
 
@@ -37,12 +35,13 @@ Given a query that matches no listings, the agent stops before calling
 `suggest_outfit` and returns a message naming what to change — 5 of 5 tries.
 
 **Why this target:**
-<!-- Why is 5 of 5 reasonable here when criterion 1 isn't? What's different
-     about this path? -->
+<!-- Should happen 5 out of 5 times; the significance of catching an invalid query earlier in the sequency can allow for the agent to use all three tools without difficulty.-->
 
 ---
 
-## 3. Something about state
+## 3. Input in one tool should equal output of previous tool
+
+Given an input for suggest_outfit() and create_fit_card(), new_item input has to exactly match any of the dictionary items in the listing dict output from search_listings (search_listings() will return a listing dictionary of various items, best match first, and the input for suggest_outfit() and create_fit_card() will be one of the several dictionary items returned). The function suggest_outfit() returns a string item later used as an input for create_fit_card(). That string item output from suggest_outfit() has to match the string outout input of create_fit_card(). All instances of matching input and outputs should work 5 out of 5 times.
 
 <!-- YOU WRITE THIS ONE.
 
@@ -54,15 +53,16 @@ Given a query that matches no listings, the agent stops before calling
      compares session["selected_item"] against what actually reached
      suggest_outfit is the shape you're after. -->
 
-
-
 **Why this target:**
+<!-- Should happen 5 out of 5 times to allow for all three tools to run properly without raising an error. No room for the criteria to fail, since matching inputs and outputs from each tool allow for the agent to use all tools with no interruptions.-->
 
 
 
 ---
 
-## 4. Something about the fit card
+## 4. Acceptable fit card answer and length
+
+Given the outfit suggestion input for create_fit_card(), the agent should return a caption that is minimum 2 sentences and max. 4 sentences, describing 2 key descriptors about the item, available sizes, and price of the item 4 out of 5 times. 
 
 <!-- YOU WRITE THIS ONE.
 
@@ -78,12 +78,14 @@ Given a query that matches no listings, the agent stops before calling
 
 
 **Why this target:**
-
+<!-- Information regarding pricing or size will most likely not be available due to lack of information on pricing or size of an item.-->
 
 
 ---
 
-## 5. Your choice
+## 5. Handling an empty wardrobe
+
+Given an empty wardrobe, the agent should automatically return general outfit advice, then suggest the user inputs a file containing a wardrobe listing in case they want specifics on recommended outfits or a caption describing a recommended outfit. This process should occur 5 out of 5 times.
 
 <!-- YOU WRITE THIS ONE TOO.
 
@@ -96,7 +98,7 @@ Given a query that matches no listings, the agent stops before calling
 
 **Why this target:**
 
-
+<!-- The agent should identify what path to take when given a wardrobe file or not. If not given a file, then the program should immediately be able to identify this and skip running the tools altogether. The agent should instead return general advice, then encourage the user to input the file in order to get access to all three tools and perform its functions.-->
 
 ---
 
