@@ -147,7 +147,13 @@
 ---
 
 Additional Rules (Branch Loop): 
-+ If the user includes a size and max price argument in search_listings(), then the second tool should return a string describing items within the desired price range inputted into search_listings (with a +/- 2 variation) and an ideal exact size (though this is secondary and can have more variation by 1 size, ex: prioritize Small, but can recommend items that are XS or M as well). Otherwise, return a string describing recommended items regardless of price and size.
++ If search_listings returns an empty list: 
+     a) Instead of raising a session["error"], the system sets to session["notice"] and recommends a description "let's try something like 'leather boots'" to the user instead, then returning the session. That way the user can either use the recommended search or refine their original description to get a non-empty list.
+     
++ If search_listings returns with a non-empty list: 
+     a) The non-empty list gets automatically inputted into suggest_outfit.
+
++ NOTE: Both scenarios call agent.py::run_agent.
 
 ## Tool Inventory
 
