@@ -54,7 +54,7 @@
 + Returns: 
      = List --> dictionaries with matching listings, best match first. 
           + Key is the field name
-          + Value are the titles associated with field names
+          + Value are field values
      = If size and max_price are not given, then the best match should be an item with keywords in its description that best matches the description input. 
      = Else, if size and max_price is given, then the best match listing should have a description that shares keywords with the input descritpion, as well as having the closest corresponding sizes and max price (prioritize prices, and if prices are not close, then prioritize choosing best listing based on size.)
 
