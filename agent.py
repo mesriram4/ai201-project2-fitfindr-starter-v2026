@@ -13,6 +13,8 @@ Build and test your three tools in `tools.py` first. Then come here.
     python agent.py          runs both example paths below
 """
 
+import re
+
 import config
 import trace
 from tools import search_listings, suggest_outfit, create_fit_card
@@ -44,6 +46,7 @@ def new_session(query: str, wardrobe: dict) -> dict:
         "outfit_suggestion": None,   # what suggest_outfit returned
         "fit_card": None,            # what create_fit_card returned
         "error": None,               # set when the run ended early
+        "notice": None,              # set when the search came back empty
     }
 
 
@@ -105,11 +108,111 @@ def run_agent(query: str, wardrobe: dict) -> dict:
       • A handler for ModelUnavailable, so a bad key produces a message rather
         than a stack trace. The import is already at the top of this file.
     """
+    # 1. Start a session.
     session = new_session(query, wardrobe)
 
-    # TODO: delete these two lines and build the loop.
-    session["error"] = "The planning loop isn't built yet — see the TODO in agent.py."
+    # 2. Count each step, and check the count before taking it.
+    count = 0
+
+    count += 1
+    trace.check_iterations(count)
+
+    # 3. Parse the query (regex — see _parse_query).
+    session["parsed"] = _parse_query(query)
+    parsed = session["parsed"]
+
+    # Invalid input is session["error"]: there is nothing to search for, so no
+    # search runs. (An empty search result is a different case — see below.)
+    if not parsed["description"]:
+        session["error"] = (
+            "I couldn't find what you're looking for in that. Describe the "
+            "item, e.g. 'vintage graphic tee under $30, size M'."
+        )
+        return session
+    if parsed["max_price"] is not None and parsed["max_price"] <= 0:
+        session["error"] = "The max price has to be more than $0. Try a price like 'under $30'."
+        return session
+
+    # 4. Search.
+    count += 1
+    trace.check_iterations(count)
+    session["search_results"] = search_listings(
+        parsed["description"], parsed["size"], parsed["max_price"]
+    )
+
+    # THE BRANCH. Empty list: put the suggestion in session["notice"] and
+    # return, so the user can take it or refine their search.
+    # suggest_outfit is never called with nothing.
+    if not session["search_results"]:
+        session["notice"] = (
+            f"No listings matched \"{parsed['description']}\". Let's try "
+            f"something like '{FALLBACK_DESCRIPTION}', or refine your "
+            f"description, size, or price and search again."
+        )
+        return session
+
+    # 5. Non-empty list: the first (best) result is the item.
+    session["selected_item"] = session["search_results"][0]
+
+    # 6. Outfit.
+    count += 1
+    trace.check_iterations(count)
+    session["outfit_suggestion"] = suggest_outfit(
+        session["selected_item"], session["wardrobe"]
+    )
+
+    # 7. Fit card.
+    count += 1
+    trace.check_iterations(count)
+    session["fit_card"] = create_fit_card(
+        session["outfit_suggestion"], session["selected_item"]
+    )
+
+    # 8. Done.
     return session
+
+
+# ── query parsing ─────────────────────────────────────────────────────────────
+
+FALLBACK_DESCRIPTION = "leather boots"
+
+_PRICE_AFTER_WORD = re.compile(
+    r"(?:under|below|less than|up to|at most|max(?:imum)?(?: of)?|<=?)\s*\$?\s*(\d+(?:\.\d+)?)",
+    re.IGNORECASE,
+)
+_PRICE_BARE = re.compile(r"\$\s*(\d+(?:\.\d+)?)")
+_SIZE = re.compile(
+    r"\bsize:?\s+(xxs|xs|xxl|xl|s|m|l|one size|us\s*\d+(?:\.\d+)?|w\d+(?:\s*l\d+)?)\b",
+    re.IGNORECASE,
+)
+
+
+def _parse_query(query: str) -> dict:
+    """
+    Pull description, size, and max_price out of plain text with regex.
+
+        "vintage graphic tee under $30, size M"
+            -> {"description": "vintage graphic tee", "size": "M", "max_price": 30.0}
+
+    Anything not found comes back as None. The description is what's left
+    after the price and size phrases are cut out.
+    """
+    text = query
+
+    max_price = None
+    price = _PRICE_AFTER_WORD.search(text) or _PRICE_BARE.search(text)
+    if price:
+        max_price = float(price.group(1))
+        text = text.replace(price.group(0), " ")
+
+    size = None
+    size_match = _SIZE.search(text)
+    if size_match:
+        size = size_match.group(1).strip().upper()
+        text = text.replace(size_match.group(0), " ")
+
+    description = re.sub(r"[\s,]+", " ", text).strip(" ,.")
+    return {"description": description, "size": size, "max_price": max_price}
 
 
 # ── running it directly ───────────────────────────────────────────────────────
@@ -117,6 +220,11 @@ def run_agent(query: str, wardrobe: dict) -> dict:
 def _show(session: dict) -> None:
     if session["error"]:
         print(f"  stopped: {session['error']}")
+        print(f"  fit_card is {session['fit_card']!r} — it should still be None here")
+        return
+
+    if session["notice"]:
+        print(f"  stopped: {session['notice']}")
         print(f"  fit_card is {session['fit_card']!r} — it should still be None here")
         return
 

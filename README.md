@@ -148,7 +148,7 @@
 
 Additional Rules (Branch Loop): 
 + If search_listings returns an empty list: 
-     a) Instead of raising a session["error"], the system sets to session["notice"] and recommends a description "let's try something like 'leather boots'" to the user instead, then returning the session. That way the user can either use the recommended search or refine their original description to get a non-empty list.
+     a) Instead of raising a session["error"], the system sets to session["notice"] and recommends a description "let's try something like 'leather boots'" to the user instead, then returning the session. That way the user can either use the recommended search returned or refine their original description to get a non-empty list.
      
 + If search_listings returns with a non-empty list: 
      a) The non-empty list gets automatically inputted into suggest_outfit.
@@ -170,15 +170,26 @@ Additional Rules (Branch Loop):
 ### `search_listings`
 
 - **What it does:**
+     + Given a description, and optionally a max price and ideal size, the function filters out items from load_listings() that do not match the desired description and given max price/size and only returns a list of dictionaries that closely match the description of the item and other constraints. Users have the option to not input a price ceiling or size, so long as they import a description.
 - **Inputs:** <!-- name and type each: `max_price` (float), not "a price" -->
+     + description (str)
+     + size (str | None)
+     + max_price (float | None)
 - **Returns:**
+     + Either a listing dictionary of items closely resembling the description (will also return items within desirable size and at/below max price if given).
 - **When it has nothing:**
+     + Will return an empty list if the description is vague or doesn't align with descriptions of existing items returned by load_listings().
+     + If no description is given, the tool by itself (without the branch loop in run_agent()) will return an error, requiring the argument 'description'.
 
 ### `suggest_outfit`
 
 - **What it does:**
+     + Takes an item from the listing dict returned by search_listings and a wardrobe dictionary (can be empty), using the model to generate 1 or 2 outfits using that item as a base. Unlike search_listing, this tool calls the model.
 - **Inputs:**
+     + new_item (dict)
+     + wardrobe (dict)
 - **Returns:**
+     + Will return a string (output from the model) 
 - **When it has nothing:**
 
 ### `create_fit_card`
@@ -233,17 +244,48 @@ $ python app.py ask '...'
 $ python -c "from tools import search_listings; print(search_listings('graphic tee', max_price=30))"
 
 ```
-
+[{'id': 'lst_002', 'title': 'Y2K Baby Tee — Butterfly Print', 'description': 'Super cute early 2000s baby tee with butterfly graphic. Fitted crop length. Tag says medium but fits like a small.', 'category': 'tops', 'style_tags': ['y2k', 'vintage', 'graphic tee', 'cottagecore'], 'size': 'S/M', 'condition': 'excellent', 'price': 18.0, 'colors': ['white', 'pink', 'purple'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_006', 'title': 'Graphic Tee — 2003 Tour Bootleg Style', 'description': 'Vintage-style bootleg tee with faded graphic. Slightly boxy fit. 100% cotton, soft and worn-in.', 'category': 'tops', 'style_tags': ['graphic tee', 'vintage', 'grunge', 'streetwear', 'band tee'], 'size': 'L', 'condition': 'good','price': 24.0, 'colors': ['black'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_017', 'title': 'Mesh Long-Sleeve Top — Black', 'description': 'Sheer black mesh long-sleeve. Great for layering under a graphic tee or over a bralette. Stretchy material, fits true to size.', 'category': 'tops', 'style_tags': ['y2k', 'grunge', 'goth', 'layering'], 'size': 'S/M', 'condition': 'excellent', 'price': 15.0, 'colors': ['black'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_033', 'title': 'Vintage Band Tee — Faded Grey', 'description': 'Faded grey band-style tee with distressed graphic. Crew neck. Fits boxy. Well-loved but no holes or major damage.', 'category': 'tops', 'style_tags': ['vintage', 'grunge', 'band tee', 'graphic tee', 'streetwear'], 'size': 'L', 'condition': 'fair', 'price': 19.0, 'colors': ['grey', 'charcoal'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_011', 'title': 'Low-Rise Cargo Pants — Khaki', 'description': 'Y2K era low-rise cargo pants. Lots of pockets. Khaki color, slightly distressed at the hems. Great for layering with a long tee.', 'category': 'bottoms', 'style_tags': ['y2k', 'cargo', '2000s', 'streetwear'], 'size': 'W29', 'condition': 'fair', 'price': 27.0, 'colors': ['khaki', 'tan'], 'brand': None, 'platform': 'poshmark'}, {'id': 'lst_012', 'title': 'Oversized Crewneck Sweatshirt — Vintage Navy', 'description': 'Perfectly faded navy crewneck. Genuinely vintage — not manufactured distressed. Ribbed cuffs and hem. No graphics, clean.', 'category': 'tops', 'style_tags': ['vintage', 'basics', 'oversized', 'classic'], 'size': 'XL (fits oversized)', 'condition': 'good', 'price': 20.0, 'colors': ['navy'], 'brand': None, 'platform': 'thredUp'}, {'id': 'lst_015', 'title': 'Vintage Graphic Hoodie — Faded Black', 'description': 'Faded black pullover hoodie with barely-visible vintage graphic on the chest. Cozy interior. Some pilling but adds to the worn-in look.', 'category': 'tops', 'style_tags': ['vintage', 'grunge', 'graphic', 'streetwear'], 'size': 'L', 'condition': 'fair', 'price': 26.0, 'colors': ['black', 'charcoal'], 'brand': None, 'platform': 'depop'}]
 ```
 $ python -c "from tools import suggest_outfit; ..."
 
 ```
+NORMAL VERSION: 
+ITEM: lst_002 Y2K Baby Tee — Butterfly Print
+str 777
+**Outfit 1: Y2K Streetwear Contrast**
+Pair the Y2K Baby Tee — Butterfly Print with the Baggy straight-leg jeans, dark wash. Cinch the waist with the Brown leather belt, and finish the look with the Chunky white sneakers and Black crossbody bag. 
+*Vibe: This outfit balances the fitted, feminine butterfly graphic with ultra-relaxed denim for an effortless off-duty pop star aesthetic.*
+
+**Outfit 2: Edgy Grunge Layering**
+Wear the Y2K Baby Tee — Butterfly Print layered under the Vintage black denim jacket, paired with the Wide-leg khaki trousers. Ground the look with the Black combat boots and accessorize with the Black crossbody bag. 
+*Vibe: The juxtaposition of a sweet, pastel baby tee with tough outerwear and earthy trousers creates the ultimate high-low vintage mix.*
+
+EMPTY WARDROBE VERSION: 
+**Outfit 1:**
+- Mid-rise baggy cargo pants in olive green
+- Chunky platform sneakers
+- Pastel beaded shoulder bag
+
+**Outfit 2:**
+- Distressed light-wash denim skirt 
+- Knee-high white boots
+- Silver chain-link belt
+
+**Vibe Check:** 
+This look blends nostalgic Y2K pop-star energy with effortless everyday streetwear.
 
 ```
 $ python -c "from tools import create_fit_card; ..."
 
 ```
+NORMAL VERSION: 
 
+ITEM: Y2K Baby Tee — Butterfly Print | 18.0 | depop | S/M
+Scored this butterfly baby tee on Depop for just 18 bucks and I'm obsessed. Paired it with baggy dark-wash jeans and chunky white sneakers to balance out the tiny top energy. It's giving low-key 2000s streetwear without trying too hard.
+
+EMPTY WARDROBE VERSION: 
+
+Scored this butterfly print baby tee on Depop for just $18 and I am fully channeling my inner 2000s pop star today. Paired it with low-rise baggy cargo pants, chunky platform slides, and tinted wire-rims for that ultimate nostalgic streetwear energy.
 ---
 
 ## How I Used AI
@@ -409,10 +451,10 @@ full. -->
 
      SUBMISSION CHECKLIST — unit 3
 
-       [ ] criteria.md has five numbered criteria, each with a target
-       [ ] Each criterion has a reason underneath it
-       [ ] All five unit 3 sections above have real content
-       [ ] Tool Inventory: all three tools, inputs WITH TYPES, a specific
+       [*] criteria.md has five numbered criteria, each with a target
+       [*] Each criterion has a reason underneath it
+       [*] All five unit 3 sections above have real content
+       [*] Tool Inventory: all three tools, inputs WITH TYPES, a specific
            return value, and the empty case
        [ ] Planning Loop names the branch rule and agent.py::run_agent
        [ ] Sample Run: one full query plus the three per-tool tests, as text

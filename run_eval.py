@@ -104,6 +104,8 @@ def main():
                 session = record["session"] or {}
                 if session.get("error"):
                     print(f"  try {attempt}: stopped early — {str(session['error'])[:60]}")
+                elif session.get("notice"):
+                    print(f"  try {attempt}: stopped early (empty search) — {str(session['notice'])[:60]}")
                 else:
                     card = (session.get("fit_card") or "")
                     print(f"  try {attempt}: completed — fit card {len(card)} chars")
@@ -187,7 +189,7 @@ def write_report(rows, args):
             session = record["session"] or {}
             item = session.get("selected_item") or {}
             lines += [
-                f"- stopped early: {'yes — ' + str(session.get('error')) if session.get('error') else 'no'}",
+                f"- stopped early: {'yes — ' + str(session.get('error')) if session.get('error') else 'yes (empty search) — ' + str(session.get('notice')) if session.get('notice') else 'no'}",
                 f"- selected_item: {item.get('title', '(none)')}"
                 + (f" (${item.get('price')}, {item.get('platform')})" if item else ""),
                 f"- search_results: {len(session.get('search_results') or [])}",
