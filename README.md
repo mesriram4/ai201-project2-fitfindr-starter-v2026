@@ -454,17 +454,88 @@ Scored this butterfly print baby tee on Depop for just $18 and I am fully channe
 
 | Criterion | Target | Try 1 | Try 2 | Try 3 | Try 4 | Try 5 | Verdict |
 |---|---|---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |  |  |
+| 1. A matching query completes all three tools  | 4 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 2. An impossible query stops before the second tool | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 3. Input in one tool should equal output of previous tool | 5 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5)|
+| 4. Acceptable fit card answer and length | 4 of 5 | PASS | PASS | PASS | PASS | PASS | MET (5/5) |
+| 5. Handling an empty wardrobe | 5 of 5 | FAIL | FAIL | FAIL | FAIL | FAIL | MISSED (0/5) |
 
 **Real output from one try**, pasted as text, naming the file and function
 that produced it:
 
 ```
+Criterion 1 Example Output: 
 
+matching query completes  (example wardrobe)
+  query: vintage graphic tee under $30
+[1] [{'id': 'lst_002', 'title': 'Y2K Baby Tee — Butterfly Print', 'description': 'Super cute early 2000s baby tee with butterfly graphic. Fitted crop length. Tag says medium but fits like a small.', 'category': 'tops', 'style_tags': ['y2k', 'vintage', 'graphic tee', 'cottagecore'], 'size': 'S/M', 'condition': 'excellent', 'price': 18.0, 'colors': ['white', 'pink', 'purple'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_006', 'title': 'Graphic Tee — 2003 Tour Bootleg Style', 'description': 'Vintage-style bootleg tee with faded graphic. Slightly boxy fit. 100% cotton, soft and worn-in.', 'category': 'tops', 'style_tags': ['graphic tee', 'vintage', 'grunge', 'streetwear', 'band tee'],'size': 'L', 'condition': 'good', 'price': 24.0, 'colors': ['black'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_033', 'title': 'Vintage Band Tee — Faded Grey', 'description': 'Faded grey band-style tee with distressed graphic. Crew neck. Fits boxy. Well-loved but no holes or major damage.', 'category': 'tops', 'style_tags': ['vintage', 'grunge', 'band tee', 'graphic tee', 'streetwear'], 'size': 'L', 'condition': 'fair', 'price': 19.0, 'colors': ['grey', 'charcoal'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_012', 'title': 'Oversized Crewneck Sweatshirt — Vintage Navy', 'description': 'Perfectly faded navy crewneck. Genuinely vintage — not manufactured distressed. Ribbed cuffs and hem. No graphics, clean.', 'category': 'tops', 'style_tags': ['vintage', 'basics', 'oversized', 'classic'], 'size': 'XL (fits oversized)', 'condition': 'good', 'price': 20.0, 'colors': ['navy'], 'brand': None, 'platform': 'thredUp'}, {'id': 'lst_015', 'title': 'VintageGraphic Hoodie — Faded Black', 'description': 'Faded black pullover hoodie with barely-visible vintage graphic on the chest. Cozy interior. Some pilling but adds to the worn-in look.', 'category': 'tops', 'style_tags': ['vintage', 'grunge', 'graphic', 'streetwear'], 'size': 'L', 'condition': 'fair', 'price': 26.0, 'colors': ['black', 'charcoal'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_017', 'title': 'Mesh Long-Sleeve Top — Black', 'description': 'Sheer black mesh long-sleeve. Great for layering under a graphic tee or over a bralette. Stretchy material, fits true to size.', 'category': 'tops', 'style_tags': ['y2k', 'grunge', 'goth', 'layering'], 'size': 'S/M', 'condition': 'excellent', 'price': 15.0, 'colors': ['black'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_003', 'title': 'Oversized Flannel Shirt — Plaid Red/Black', 'description': 'Classic oversized flannel. Great layering piece. A few tiny pulls in the fabric but nothing visible when worn.', 'category': 'tops', 'style_tags': ['grunge', 'vintage', 'flannel', 'streetwear', 'layering'], 'size': 'XL (oversized)', 'condition': 'good', 'price': 22.0, 'colors': ['red', 'black'], 'brand': 'Woolrich', 'platform': 'thredUp'}, {'id': 'lst_011', 'title': 'Low-Rise Cargo Pants — Khaki', 'description': 'Y2K era low-rise cargo pants. Lots of pockets. Khaki color, slightly distressed at the hems. Great for layering with a long tee.', 'category': 'bottoms', 'style_tags': ['y2k', 'cargo', '2000s', 'streetwear'], 'size': 'W29', 'condition': 'fair', 'price': 27.0, 'colors': ['khaki', 'tan'], 'brand': None, 'platform': 'poshmark'}, {'id': 'lst_013', 'title': '90s Silk Slip Dress — Floral,Midi Length', 'description': 'Delicate 90s slip dress in a muted floral print. Midi length, adjustable straps. Light snag on the side seam— not visible when worn.', 'category': 'bottoms', 'style_tags': ['90s', 'vintage', 'feminine', 'floral', 'cottagecore'], 'size': 'M', 'condition': 'good', 'price': 30.0, 'colors': ['ivory', 'dusty pink', 'green'], 'brand': None, 'platform': 'depop'}, {'id': 'lst_014', 'title':'Leather Belt — Brown, Braided', 'description': 'Genuine leather braided belt. Adjustable, multiple holes. Classic Western buckle. Can be dressed up or down.', 'category': 'accessories', 'style_tags': ['vintage', 'western', 'classic', 'earth tones'], 'size': 'One Size (adjustable)', 'condition': 'excellent', 'price': 12.0, 'colors': ['brown'], 'brand': None, 'platform': 'thredUp'}]
+      in:  ('vintage graphic tee', None, 30.0)
+      out: 10 items: Y2K Baby Tee — Butterfly Print, Graphic Tee — 2003 Tour Bootleg Style, Vintage Band Tee — Faded Grey … +7 more
+[2] **Outfit 1**
+- Y2K Baby Tee — Butterfly Print
+- Baggy straight-leg jeans, dark wash
+- Chunky white sneakers
+- Black crossbody bag
+
+*Vibe:* A quintessential Y2K street style look that balances the fitted, feminine butterfly tee with the relaxed, cool-girl energy of darkindigo denim.
+
+**Outfit 2**
+- Y2K Baby Tee — Butterfly Print
+- Wide-leg khaki trousers
+- Vintage black denim jacket
+- Chunky white sneakers
+- Brown leather belt
+
+*Vibe:* An effortless mix of retro Y2K sweetness and structured earth-tone minimalism for a balanced weekend fit.
+      in:  ({'id': 'lst_002', 'title': 'Y2K Baby Tee — Butterfly Print', 'description': 'Super cute early 2000s baby tee …
+      out: **Outfit 1** - Y2K Baby Tee — Butterfly Print - Baggy straight-leg jeans, dark wash - Chunky white sneakers - …
+[3] Found this little butterfly print baby tee on Depop for $18 and haven’t taken it off since. Paired it with dark wash baggy straight-leg jeans and chunky white sneakers for that ultimate Y2K street style energy. Finished the whole fit off with my trusty black crossbody bag.
+      in:  ('**Outfit 1**\n- Y2K Baby Tee — Butterfly Print\n- Baggy straight-leg jeans, dark wash\n- Chunky white sneake…
+      out: Found this little butterfly print baby tee on Depop for $18 and haven’t taken it off since. Paired it with dar…
+  try 1: completed — fit card 273 chars
+
+FILE: agent.py 
+FUNCTION: run_agent(query, wardrobe)
+
+```
+Criterion 2 Example Output
+
+query: designer ballgown size XXS under $5
+[1] []
+      in:  ('designer ballgown', 'XXS', 5.0)
+      out: [] (empty)
+  try 1: stopped early (empty search) — No listings matched "designer ballgown". Let's try something...
+
+FILE: agent.py 
+FUNCTION: run_agent(query, wardrobe)
+
+```
+Criterion 3 Example Output
+
+input in one tool equals output of second tool  (example wardrobe)
+  query: denim jacket under $50
+[1] in:  ('denim jacket', None, 50.0)
+      out: 7 items: Denim Jacket — Light Wash, Cropped, Vintage Levi's 501 Jeans — Medium Wash, 90s Track Jacket — Navy/White Stripe … +4 m...
+     
+[2] in:  ({'id': 'lst_007', 'title': 'Denim Jacket — Light Wash, Cropped', 'description': 'Cropped denim jacket in a line...})
+      out: **Outfit 1** - Denim Jacket — Light Wash, Cropped - White ribbed tank top - Baggy straight-leg jeans, dark was…
+
+FILE: agent.py 
+FUNCTION: run_agent(query, wardrobe)
+```
+Criterion 4
+
+[3] Scored these low-rise khaki cargo pants on Poshmark for $27 and honestly they were so worth it. Paired them with a white ribbed tank, black cropped zip hoodie, and chunky sneakers for the ultimate Y2K streetwear moment. Swapping the top for an oversized grey crewneck and combat boots gives it that perfect cozy, grunge-leaning 2000s street style.
+
+FILE: tools.py 
+FUNCTION: create_fit_card(outfit, new_item)
+```
+Criterion 5
+
+[3] Scored these Off-White canvas sneakers on Poshmark for just $20 and the naturally yellowed soles give them the exact vintage look I wanted. Wearing them today with dark straight-leg jeans and an oversized heather grey crewneck for running errands. Later I swapped into olive green utility trousers and a black cropped boxy tee because they just go with everything.
+
+FILE: tools.py 
+FUNCTION: create_fit_card(outfit, new_item)
 ```
 
 ---
@@ -489,11 +560,11 @@ that produced it:
 
 | # | Criterion | Target | Verdict | How I decided |
 |---|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | A matching query completes all three tools | 4/5 | MET | Successfully ran through all three tools and returned the desired output 5 out of 5 times, exceeding initial expectations. The query was valid, and there was a wardrobe file the program was able to reference, returning a well-written fit card. |
+| 2 | An impossible query stops before the second tool | 5/5 | MET | For every run under the second scenario, the program was able to identify if a query doesn't match any listings, returning a message informing the user of a query mismatch and requesting they try a different query. |
+| 3 | Input in one tool should equal output of previous tool | 5/5 | MET | 5 out of 5 times, the program always takes the first listing from the outputted listing dict of search_listings() and inputs it as an argument for suggest_outfits(). |
+| 4 | Acceptable fit card answer and length | 4/5 | MET | 5 out of 5 times, the program returns descriptions between 2-4 sentences (mostly 3 sentences in length) while also included detailed descriptions about the price and unique features of that outfit. |
+| 5 | Handling an empty wardrobe | 5/5 | MISSED| The program does return a description related to the query, however, the description never includes a blurb about inputting a wardrobe for a more detailed description about the outfit. In fact, the program runs through all three tools instead of stopping the run and automatically returning a message recommedning the user inputs a wardrobe for more detailed advice. |
 
 **Diagnoses**
 
@@ -512,6 +583,37 @@ that produced it:
      one should be visibly shorter, because it stops. If your two traces are
      the same length, your branch isn't working — and this is the fastest way
      anyone will ever find that out. -->
+"""
+     [1] [{'id': 'lst_003', 'title': 'Oversized Flannel Shirt — Plaid Red/Black', 'description': 'Classic oversized flannel. Great layering piece. A few tiny pulls inthe fabric but nothing visible when worn.', 'category': 'tops', 'style_tags': ['grunge', 'vintage', 'flannel', 'streetwear', 'layering'], 'size': 'XL (oversized)', 'condition': 'good', 'price': 22.0, 'colors': ['red', 'black'], 'brand': 'Woolrich', 'platform': 'thredUp'}, {'id': 'lst_024', 'title': 'Vintage Polo Shirt — Forest Green', 'description': 'Classic polo in forest green. Short sleeve, ribbed collar. Slightly boxy. The kind of piece that goes with everything.', 'category':'tops', 'style_tags': ['vintage', 'preppy', 'classic', 'earth tones'], 'size': 'M', 'condition': 'good', 'price': 18.0, 'colors': ['green', 'forest green'], 'brand': 'Ralph Lauren', 'platform': 'thredUp'}]
+          in:  ('shirts', None, 30.0)
+          out: 2 items: Oversized Flannel Shirt — Plaid Red/Black, Vintage Polo Shirt — Forest Green
+     [2] **Outfit 1: 90s Grunge Layering**
+     Wear the White ribbed tank top as a base, add the Oversized Flannel Shirt left unbuttoned, and pair with the Baggy straight-leg jeans, dark wash secured with theBrown leather belt. Finish with the Black combat boots and Black crossbody bag. 
+     *Vibe:* Effortless 90s alternative rock nostalgia with a tough, edgy finish.
+
+     **Outfit 2: Streetwear Contrast**
+     Layer the Black cropped zip hoodie underneath the Oversized Flannel Shirt (worn buttoned halfway), paired with the Wide-leg khaki trousers and Chunky white sneakers. Complete the look with the Black crossbody bag.
+     *Vibe:* A cozy, textured clash of streetwear and earthy minimalism that leans into skater culture.
+          in:  ({'id': 'lst_003', 'title': 'Oversized Flannel Shirt — Plaid Red/Black', 'description': 'Classic oversized fla…
+          out: **Outfit 1: 90s Grunge Layering** Wear the White ribbed tank top as a base, add the Oversized Flannel Shirt le…
+     [3] Got this red and black flannel off thredUp for $22 and it’s basically my new uniform. Wore it open over a ribbed tank with baggy jeans and combat boots for some heavy 90s alt-rock energy. Later swapped it over a cropped hoodie and wide-leg khakis for that effortless skate-culture look.
+          in:  ('**Outfit 1: 90s Grunge Layering**\nWear the White ribbed tank top as a base, add the Oversized Flannel Shirt…
+          out: Got this red and black flannel off thredUp for $22 and it’s basically my new uniform. Wore it open over a ribb…
+
+     Found:    Oversized Flannel Shirt — Plaid Red/Black — $22.0 on thredUp
+
+     Outfit:   **Outfit 1: 90s Grunge Layering**
+     Wear the White ribbed tank top as a base, add the Oversized Flannel Shirt left unbuttoned, and pair with the Baggy straight-leg jeans, dark wash secured with theBrown leather belt. Finish with the Black combat boots and Black crossbody bag. 
+     *Vibe:* Effortless 90s alternative rock nostalgia with a tough, edgy finish.
+
+     **Outfit 2: Streetwear Contrast**
+     Layer the Black cropped zip hoodie underneath the Oversized Flannel Shirt (worn buttoned halfway), paired with the Wide-leg khaki trousers and Chunky white sneakers. Complete the look with the Black crossbody bag.
+     *Vibe:* A cozy, textured clash of streetwear and earthy minimalism that leans into skater culture.
+
+     Fit card: Got this red and black flannel off thredUp for $22 and it’s basically my new uniform. Wore it open over a ribbed tank with baggy jeans and combat boots for some heavy 90s alt-rock energy. Later swapped it over a cropped hoodie and wide-leg khakis for that effortless skate-culture look.
+
+     2 model calls this session, 698 prompt + 233 output tokens
+"""
 
 **Happy path**
 
