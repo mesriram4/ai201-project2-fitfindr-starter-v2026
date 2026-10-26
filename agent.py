@@ -51,6 +51,7 @@ def new_session(query: str, wardrobe: dict) -> dict:
 
 
 # ── planning loop ─────────────────────────────────────────────────────────────
+trace.start_trace()   # clears the log and resets the step counter to 0
 
 def run_agent(query: str, wardrobe: dict) -> dict:
     """
@@ -108,6 +109,10 @@ def run_agent(query: str, wardrobe: dict) -> dict:
       • A handler for ModelUnavailable, so a bad key produces a message rather
         than a stack trace. The import is already at the top of this file.
     """
+    from mcp_client import call_tool
+    import trace
+
+
     # 1. Start a session.
     session = new_session(query, wardrobe)
 
@@ -120,6 +125,7 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     # 3. Parse the query (regex — see _parse_query).
     session["parsed"] = _parse_query(query)
     parsed = session["parsed"]
+    #trace.step("parse_query", inputs=query, returned=parsed)
 
     # Invalid input is session["error"]: there is nothing to search for, so no
     # search runs. (An empty search result is a different case — see below.)
@@ -136,9 +142,15 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     # 4. Search.
     count += 1
     trace.check_iterations(count)
-    session["search_results"] = search_listings(
-        parsed["description"], parsed["size"], parsed["max_price"]
-    )
+    session["search_results"] = call_tool("search_listings", {
+        "description": parsed["description"],
+        "size": parsed["size"],
+        "max_price": parsed["max_price"],
+    })
+    trace.step(session["search_results"], 
+               inputs=(parsed["description"], parsed["size"], parsed["max_price"]), 
+               returned=session["search_results"]
+               )
 
     # THE BRANCH. Empty list: put the suggestion in session["notice"] and
     # return, so the user can take it or refine their search.
@@ -160,6 +172,10 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     session["outfit_suggestion"] = suggest_outfit(
         session["selected_item"], session["wardrobe"]
     )
+    trace.step(session["outfit_suggestion"], 
+               inputs=(session["selected_item"], session["wardrobe"]), 
+               returned=session["outfit_suggestion"]
+               )
 
     # 7. Fit card.
     count += 1
@@ -167,6 +183,10 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     session["fit_card"] = create_fit_card(
         session["outfit_suggestion"], session["selected_item"]
     )
+    trace.step(session["fit_card"], 
+               inputs=(session["outfit_suggestion"], session["selected_item"]), 
+               returned=session["fit_card"]
+            )
 
     # 8. Done.
     return session

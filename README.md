@@ -177,6 +177,7 @@ Additional Rules (Branch Loop):
      + max_price (float | None)
 - **Returns:**
      + Either a listing dictionary of items closely resembling the description (will also return items within desirable size and at/below max price if given).
+     + ...
 - **When it has nothing:**
      + Will return an empty list if the description is vague or doesn't align with descriptions of existing items returned by load_listings().
      + If no description is given, the tool by itself (without the branch loop in run_agent()) will return an error, requiring the argument 'description'.
@@ -189,15 +190,21 @@ Additional Rules (Branch Loop):
      + new_item (dict)
      + wardrobe (dict)
 - **Returns:**
-     + Will return a string (output from the model) 
+     + Will return a string with outfit suggestions based on what exists within the wardrobe. 
 - **When it has nothing:**
+     + When inputting an empty wardrobe dict into the tool, will return general outfit advice based around the chosen item from listing dict. 
 
 ### `create_fit_card`
 
 - **What it does:**
+     + Takes outfit advice and the chosen item from list dictionary and generates a post-ready caption about the outfit. 
 - **Inputs:**
+     + outfit (str)
+     + new_item (dict)
 - **Returns:**
+     + A string item with the detailed caption about the outfit
 - **When it has nothing:**
+     + This is entirely dependent on tool 2. create_fit_card() must have inputs ready in order to session to follow through with all three Tools. Therefore, if a wardrobe is not given in Tool 2, the second tool will generate general outfit advice. Tool 3 will just create a caption based around that general outfit advice that does not reference the wardrobe.
 
 ---
 
@@ -215,13 +222,16 @@ Additional Rules (Branch Loop):
      function have to be real. -->
 
 **Branch rule:**
++ Unclear description, search_listings will return a statement letting the user know their request is unclear, then recommend a prompt that will generate a listing dict that can pass onto the next tool.
 
-**Where it lives:** `agent.py::run_agent`
+**Where it lives:** `
++ Lives in agent.py::run_agent() --> starting from line 143
 
 **How the query is parsed:** <!-- regex, string splitting, or asking the model — say which -->
++ Used regex to parse description.
 
 **What moves through the session:** <!-- which fields, in what order -->
-
+     The session starts with a string query (a description), which then returns a listing dictionary. One item from that listing dictionary is then inputted into the second tool along side a given wardrobe, the tool then returns a string outfit suggestion. That string is inputted into the third tool along with the selected item from the listing dictionary from the first tool, which is then used to generate a postable caption. The branch loop happens if the query doesn't match any of the listings, asking the user to try another description until a wardrobe items can be passed onto the next tool. In case the wardrobe dict is empty, the second tool will instead pass a general outfit advice string, which can then be used to generate a caption when passed through the third tool.
 ---
 
 ## Sample Run
@@ -234,7 +244,116 @@ Additional Rules (Branch Loop):
 **One full query**
 
 ```
-$ python app.py ask '...'
+$ python app.py ask 'vintage graphic tee under 30, size M'
+{
+  "query": "denim jacket under 50",
+  "parsed": {
+    "description": "denim jacket",
+    "size": null,
+    "max_price": 50.0
+  },
+  "search_results": [
+    [
+      "lst_007",
+      "Denim Jacket — Light Wash, Cropped",
+      "S",
+      42.0
+    ],
+    [
+      "lst_001",
+      "Vintage Levi's 501 Jeans — Medium Wash",
+      "W30 L30",
+      38.0
+    ],
+    [
+      "lst_004",
+      "90s Track Jacket — Navy/White Stripe",
+      "M",
+      45.0
+    ],
+    [
+      "lst_016",
+      "High-Waisted Denim Shorts — Cutoff",
+      "W27",
+      24.0
+    ],
+    [
+      "lst_032",
+      "Shacket — Olive Canvas",
+      "M/L",
+      33.0
+    ],
+    [
+      "lst_037",
+      "Straight Leg Black Jeans — Faded",
+      "W28",
+      30.0
+    ],
+    [
+      "lst_038",
+      "Denim Vest — Medium Wash, Studded",
+      "M",
+      27.0
+    ]
+  ],
+  "selected_item": {
+    "id": "lst_007",
+    "title": "Denim Jacket — Light Wash, Cropped",
+    "description": "Cropped denim jacket in a light wash. Great structured shoulders. Blank canvas — no patches or pins but would be perfect to customize.",
+    "category": "outerwear",
+    "style_tags": [
+      "denim",
+      "vintage",
+      "classic",
+      "streetwear"
+    ],
+    "size": "S",
+    "condition": "excellent",
+    "price": 42.0,
+    "colors": [
+      "light blue"
+    ],
+    "brand": "Wrangler",
+    "platform": "poshmark"
+  },
+  "wardrobe": {
+    "items": []
+  },
+  "outfit_suggestion": "**Outfit 1: Off-Duty Monochrome**\n- Black ribbed tank top\n- High-waisted black wide-leg trousers\n- Black leather platform loafers\n- Silver hoop earrings\n*Vibe:* Effortless streetwear with a sharp, balanced contrast.\n\n**Outfit 2: Retro Contrast**\n- White graphic baby tee\n- Dark-wash straight-leg jeans\n- Retro canvas low-top sneakers\n- Tortoiseshell oval sunglasses\n*Vibe:* A nod to classic '90s casual with a modern, cropped silhouette.",
+  "fit_card": "Scored this cropped light wash denim jacket on Poshmark for $42 and honestly haven't taken it off since. Loving how it pops against my black ribbed tank, high-waisted wide-leg trousers, and platform loafers for that effortless streetwear contrast. It’s giving major '90s casual when I throw it over a white graphic baby tee and dark-wash straight legs.",
+  "error": null,
+  "notice": null
+}
+--- empty wardrobe checks ---
+wardrobe items: 0
+outfit is non-empty str: True
+fit card made: True
+error: None | notice: None
+(.venv) PS C:\Users\Owner\OneDrive\Desktop\CodePath!\AI201\ai201-project2-fitfindr-starter-v2026> 
+(.venv) PS C:\Users\Owner\OneDrive\Desktop\CodePath!\AI201\ai201-project2-fitfindr-starter-v2026> python app.py ask "vintage graphic tee under 30, size M"
+>> 
+
+  Found:    Y2K Baby Tee — Butterfly Print — $18.0 on depop
+
+  Outfit:   **Outfit 1**
+* Y2K Baby Tee — Butterfly Print
+* Baggy straight-leg jeans, dark wash
+* Brown leather belt
+* Chunky white sneakers
+* Black crossbody bag
+
+*Vibe:* This balances the Y2K fitted crop top with relaxed denim for an effortless, nostalgic off-duty model look.
+
+**Outfit 2**
+* Y2K Baby Tee — Butterfly Print
+* Wide-leg khaki trousers
+* Vintage black denim jacket
+* Chunky white sneakers
+* Black crossbody bag
+
+*Vibe:* A playful mix of earthy minimalism and early 2000s whimsy that feels fresh and street-style ready.
+
+  Fit card: Found this little butterfly print baby tee on Depop for $18 and haven't taken it off since. Paired it with baggy dark wash straight-leg jeans, a brown leather belt, and chunky white sneakers for that effortless, nostalgic off-duty model look. Seriously living in this vibe right now.
 
 ```
 
@@ -300,14 +419,20 @@ Scored this butterfly print baby tee on Depop for just $18 and I am fully channe
 **Moment 1**
 
 - *What I asked for:*
+     + When evaluating the rules I created for the branch loop, I asked Claude to test and see if it can understand the original branch loop I wrote. For the original branch loop, I intended for the first function to inform the user that their prompt was insufficient before proceeding with the rest of the function.
 - *What came back:*
+     + Claude was able to act as a partner programmer and tell me that if they were asked to write code based on my branch loop rule, it would not understand it; Claude then recommended a rule to help me better understand how to write branch loops.
 - *What I changed:*
+     + Claude was able to help refine my query, building on my understanding of how branch loops work, but one thing I changed that different from claude is what we raise if a query is vague and doesn't match the list descriptions. Claude initially proposed raising a session['error']. Instead I decided it would be best to return a statement that would allow the user to retry their query so the session can proceed onto the next tool. Claude refined this idea and decided to add another type of raised "error", session['notice'].
 
 **Moment 2**
 
 - *What I asked for:*
+     + While working on the first Tool, search_listings(), I asked claude to go through the To Do list and write lines of code that align with the criteria I've established before programming (returning everything at or below max price if given and sizes that are at or +/- 1 in size away from the given size). I continued tailoring the logistics for the program, such as how the program should rank best options based on parsed key works and given price/size. 
 - *What came back:*
+     + Claude gave me exactly what I needed, I tested the code, and it fit the criteria I wrote. I tested the entire session with a query after Claude and I finished Tools 2 and 3, and I managed to get the best results I wanted using both a happy path and an empty path.
 - *What I changed:*
+     + Initially, I decided to include some lines of code to original function Claude returned, essentially reducing the list size of listing dicts from search_tools(). I believed this would make the list more concise and easier for users to choose items. However, when I asked Claude to test this, I quickly realized that this system won't work especially with more specific queries, and I decided not to shorten the returned listing dict.
 
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 

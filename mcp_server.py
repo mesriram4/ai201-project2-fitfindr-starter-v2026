@@ -58,6 +58,7 @@ works with a direct call, and **a documented failure earns the point in full.**
 """
 
 from mcp.server.fastmcp import FastMCP
+from mcp_client import call_tool
 
 from tools import search_listings as _search_listings_impl  # noqa: F401 — you'll use this below
 
@@ -68,21 +69,25 @@ mcp = FastMCP("fitfindr", log_level="WARNING")
 
 
 # ── TODO: uncomment and fill this in ──────────────────────────────────────────
-#
-# @mcp.tool()
-# def search_listings(
-#     description: str,
-#     size: str | None = None,
-#     max_price: float | None = None,
-# ) -> list[dict]:
-#     """
-#     <-- YOUR DESCRIPTION GOES HERE.
-#
-#         One or two sentences. What does this tool do, what does it need, and
-#         what does it give back when it finds nothing? Written for a reader
-#         who cannot see the code.
-#     """
-#     return _search_listings_impl(description, size, max_price)
+
+@mcp.tool()
+def search_listings(
+    description: str,
+    size: str | None = None,
+    max_price: float | None = None,
+    ) -> list[dict]:
+    """
+        search_listings() takes a string description (query), and optionally, 
+        a size and maximum price (inclusive). This function returns 
+        a listing dictionary containing items that match the keywords 
+        of the query. If the description is too vague or has keywords
+        that don't align with the existing catalogue of items, then 
+        search_listings() will return a string reminding the user that 
+        their query is too vague while providing an example query that's
+        more specific. The user is then allowed to try again after the 
+        session is returned.
+    """
+    return _search_listings_impl(description, size, max_price)
 #
 # ──────────────────────────────────────────────────────────────────────────────
 #

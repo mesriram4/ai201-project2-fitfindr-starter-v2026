@@ -35,7 +35,7 @@ Given a query that matches no listings, the agent stops before calling
 `suggest_outfit` and returns a message naming what to change — 5 of 5 tries.
 
 **Why this target:**
-<!-- Should happen 5 out of 5 times; the significance of catching an invalid query earlier in the sequency can allow for the agent to use all three tools without difficulty.-->
+<!-- Should happen 5 out of 5 times; the significance of catching an invalid query earlier in the sequence can allow for the agent to use all three tools without difficulty.-->
 
 ---
 

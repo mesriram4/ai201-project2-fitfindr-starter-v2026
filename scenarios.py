@@ -29,12 +29,26 @@ SCENARIOS = [
         "criterion": 2,
     },
     {
-        # A user with nothing saved. One of unit 4's three failure modes.
-        "name": "empty wardrobe",
+        # A user with nothing saved. One of unit 4's three failure modes. Criterion 3 
+        "name": "input in one tool equals output of second tool",
         "query": "denim jacket under $50",
-        "wardrobe": "empty",
-        "criterion": None,
+        "wardrobe": "example",
+        "criterion": 3,
     },
+    {
+        # A user with nothing saved. One of unit 4's three failure modes.
+        "name": "acceptable fit card answer and length",
+        "query": "khaki pants under $35",
+        "wardrobe": "example",
+        "criterion": 4,
+    },
+    {
+        # A user with nothing saved. One of unit 4's three failure modes.
+        "name": "handling an empty wardrobe",
+        "query": "Sneakers for under $30",
+        "wardrobe": "empty",
+        "criterion": 5,
+    }
     # TODO: add what your criteria 3, 4 and 5 need.
     #
     # Set "criterion" to the number in criteria.md that the scenario tests.

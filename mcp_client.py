@@ -58,7 +58,7 @@ def call_tool(name: str, arguments: dict):
     try:
         return asyncio.run(_call(name, arguments))
     except MCPError:
-        raise
+        raise 
     except Exception as exc:  # noqa: BLE001 — re-raised readably below
         raise MCPError(
             f"Couldn't call '{name}' over MCP: {exc}\n"
