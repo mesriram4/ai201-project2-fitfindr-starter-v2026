@@ -47,6 +47,7 @@ def new_session(query: str, wardrobe: dict) -> dict:
         "fit_card": None,            # what create_fit_card returned
         "error": None,               # set when the run ended early
         "notice": None,              # set when the search came back empty
+        "wardrobe_empty": not ((wardrobe or {}).get("items") or []),  # True when no wardrobe was given
     }
 
 
@@ -172,8 +173,10 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     session["outfit_suggestion"] = suggest_outfit(
         session["selected_item"], session["wardrobe"]
     )
-    trace.step(session["outfit_suggestion"], 
-               inputs=(session["selected_item"], session["wardrobe"]), 
+    if session["wardrobe_empty"]:
+        session["outfit_suggestion"] += EMPTY_WARDROBE_OUTFIT_NOTE
+    trace.step(session["outfit_suggestion"],
+               inputs=(session["selected_item"], session["wardrobe"]),
                returned=session["outfit_suggestion"]
                )
 
@@ -183,8 +186,10 @@ def run_agent(query: str, wardrobe: dict) -> dict:
     session["fit_card"] = create_fit_card(
         session["outfit_suggestion"], session["selected_item"]
     )
-    trace.step(session["fit_card"], 
-               inputs=(session["outfit_suggestion"], session["selected_item"]), 
+    if session["wardrobe_empty"]:
+        session["fit_card"] += EMPTY_WARDROBE_CAPTION_NOTE
+    trace.step(session["fit_card"],
+               inputs=(session["outfit_suggestion"], session["selected_item"]),
                returned=session["fit_card"]
             )
 
@@ -195,6 +200,15 @@ def run_agent(query: str, wardrobe: dict) -> dict:
 # ── query parsing ─────────────────────────────────────────────────────────────
 
 FALLBACK_DESCRIPTION = "leather boots"
+
+EMPTY_WARDROBE_OUTFIT_NOTE = (
+    "\n\n(No wardrobe was provided, so this is general outfit advice. Upload "
+    "a wardrobe file if you want outfits built from pieces you own.)"
+)
+EMPTY_WARDROBE_CAPTION_NOTE = (
+    "\n\n(This caption was created from general outfit advice, not from a "
+    "wardrobe.)"
+)
 
 _PRICE_AFTER_WORD = re.compile(
     r"(?:under|below|less than|up to|at most|max(?:imum)?(?: of)?|<=?)\s*\$?\s*(\d+(?:\.\d+)?)",

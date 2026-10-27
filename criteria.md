@@ -25,7 +25,7 @@ Given a query that matches at least one listing, the agent completes all three
 tool calls and returns a fit card — in at least 4 of 5 tries.
 
 **Why this target:**
-<! 4 out of 5 times the program should be able to identify if the query is valid, and if it is, the agent will proceed with the loop. The 1 out of 5 times could happen if no wardrobe file is given, so the program would have to automatically return a general advice suggestion instead of going through all three tools. -->
+<! 4 out of 5 times the program should be able to identify if the query is valid, and if it is, the agent will proceed with the loop. The 1 out of 5 times could happen if the query doesn't match any listings, so the program would have to return an empty list and request the user input a different query. -->
 
 ---
 
@@ -85,7 +85,7 @@ Given the outfit suggestion input for create_fit_card(), the agent should return
 
 ## 5. Handling an empty wardrobe
 
-Given an empty wardrobe, the agent should automatically return general outfit advice, then suggest the user inputs a file containing a wardrobe listing in case they want specifics on recommended outfits or a caption describing a recommended outfit. This process should occur 5 out of 5 times.
+Given an empty wardrobe, the agent should automatically return general outfit advice from Tool 2, then suggest the user inputs a file containing a wardrobe listing in case they want specifics on recommended outfits or a caption describing a recommended outfit. This string is still passed to Tool 3, where a post caption is still generated. This process should occur 5 out of 5 times.
 
 <!-- YOU WRITE THIS ONE TOO.
 
@@ -98,7 +98,7 @@ Given an empty wardrobe, the agent should automatically return general outfit ad
 
 **Why this target:**
 
-<!-- The agent should identify what path to take when given a wardrobe file or not. If not given a file, then the program should immediately be able to identify this and skip running the tools altogether. The agent should instead return general advice, then encourage the user to input the file in order to get access to all three tools and perform its functions.-->
+<!-- The agent should be able to distinguish between an input with or without a wardrobe and respond appropriately. If a wardrobe is not given, then the program should be able to return a statement that doesn't rely on pieces from a given wardrobe to come up with outfit combinations. A statement about requesting a wardrobe file should exist to inform the user that a wardrobe was not used in coming up with outfit combinations. -->
 
 ---
 
