@@ -434,6 +434,9 @@ Scored this butterfly print baby tee on Depop for just $18 and I am fully channe
 - *What I changed:*
      + Initially, I decided to include some lines of code to original function Claude returned, essentially reducing the list size of listing dicts from search_tools(). I believed this would make the list more concise and easier for users to choose items. However, when I asked Claude to test this, I quickly realized that this system won't work especially with more specific queries, and I decided not to shorten the returned listing dict.
 
+- UNIT 4 UPDATE: 
+     + When testing this program, Claude was useful in helping me understand how the program runs with an empty wardrobe. After Claude gave me a break down of what was outputted from Tool 2 and Tool 3, I asked Claude to fix run_agent() to identify and remind the user that these outputted strings and captions do not reference a wardrobe. Claude gave me a summary of what additional features I wanted to include, and I approved of the integration, including the additional idea Claude had about adding an extra branch that flags an empty wardrobe. After evaluating the code to confirm the changes, I ran the tests, and all test cases were met due to a fix on handling an empty wardrobe.
+
 <!-- ═══════════════════════ UNIT 4 — THE TEST ═══════════════════════
 
      Don't fill these in during unit 3.
